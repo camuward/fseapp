@@ -1,5 +1,5 @@
 p5.disableFriendlyErrors = true;
-var cnv;
+var cnv, backgroundImg;
 
 function setup() {
     cnv = createCanvas(650, 600);
@@ -9,6 +9,8 @@ function setup() {
 }
 
 function draw() {
+    background(backgroundImg);
+
     switch (state) {
         case STATE.MENU:
             drawMenu();
@@ -46,6 +48,8 @@ function setState(newState) {
             initMenu();
             break;
         case STATE.COLOR:
+            backgroundImg = loadImage("assets/color_bg.jpg");
+            
             const colorBank = {
                 "Easy": ["red", "yellow", "blue", "green"],
                 "Medium": ["red", "yellow", "blue", "green", "orange", "purple"],
@@ -59,6 +63,19 @@ function setState(newState) {
             const index = Math.floor(Math.random() * 4);
             opts.color = opts.colors[index];
             break;
+        case STATE.DIRECTION:
+            backgroundImg = loadImage("assets/dir_bg.jpg");
+
+            const DIRS = {
+                UP: "up",
+                DOWN: "down",
+                LEFT: "left",
+                RIGHT: "right",
+            };
+
+            opts.direction = Object.values(DIRS)[Math.floor(Math.random() * 4)];
+
+            break;
     };
 
     state = newState;
@@ -66,14 +83,14 @@ function setState(newState) {
 // #endregion
 
 // #region menu
-var opts, backgroundImg, settingsImg;
+var opts, settingsImg;
 
 function initMenu() {
     opts = ({
         settings: false
     });
     state = STATE.MENU;
-    backgroundImg = loadImage("assets/background.jpg");
+    backgroundImg = loadImage("assets/menu_bg.jpg");
     settingsImg = loadImage("assets/settings.png");
 
     const labels = ["Mode", "Difficulty", "# Rounds"];
@@ -115,8 +132,6 @@ function initMenu() {
 }
 
 function drawMenu() {
-    background(backgroundImg);
-
     if (opts.settings) {
         drawSettings();
         return;
@@ -173,8 +188,6 @@ function createDropdown(id, pos, entries) {
 
 // #region color page
 function drawColor() {
-    background(0, 0, 40);
-
     for (let i = 0; i < 4; i++) {
         const [width, height] = [200, 200];
         const pad = 10;
@@ -193,17 +206,7 @@ function drawColor() {
 // #endregion
 
 // #region direction page
-function drawDirection(){
-    background(240, 100, 100);
-    
-    const DIRS = {
-        UP: "up",
-        DOWN: "down",
-        LEFT: "left",
-        RIGHT: "right",
-    };
-
-    const direction = DIRS.RIGHT;
-    text(`Move the cirle ${direction}`, 325, 80);
+function drawDirection() {
+    text(`Move the cirle ${opts.direction}`, 325, 80);
 }
 // #endregion
