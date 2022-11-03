@@ -36,8 +36,25 @@ function setState(newState) {
     if (state === STATE.MENU)
         menuChildren().map(el => el.remove());
 
-    if (newState == STATE.MENU)
-        initMenu();
+    switch (newState) {
+        case STATE.MENU:
+            initMenu();
+            break;
+        case STATE.COLOR:
+            const colorBank = {
+                "Easy": ["red", "yellow", "blue", "green"],
+                "Medium": ["red", "yellow", "blue", "green", "orange", "purple"],
+                "Hard": [],
+            };
+
+            opts.colors = colorBank[opts["Difficulty"]]
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 4);
+
+            const index = Math.floor(Math.random() * 4);
+            opts.color = opts.colors[index];
+            break;
+    };
 
     state = newState;
 }
@@ -151,17 +168,18 @@ function createDropdown(id, pos, entries) {
 
 // #region color page
 function drawColor() {
-    background(240, 100, 100);
-
-    text(`Select the color ${color}`);
-    const colors = ["red", "yellow", "blue", "green"];
+    background(0, 0, 40);
 
     for (let i = 0; i < 4; i++) {
         const x = (i % 2) * 325;
         const y = Math.floor(i / 2) * 300;
-        
-        fill(colors[i]);
-        rect(x, y, 325, 300);
+
+        fill(opts.colors[i]);
+        rect(x + 50, y + 50, 325 - 100, 300 - 100);
     }
+
+    fill(0, 0, 100);
+    textSize(25);
+    text(`Select the color ${opts.color}`, 325, 80);
 }
 // #endregion
