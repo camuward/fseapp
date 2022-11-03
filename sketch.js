@@ -4,6 +4,7 @@ var cnv, backgroundImg;
 function setup() {
     cnv = createCanvas(650, 600);
     colorMode(HSB, 360, 100, 100, 100);
+    strokeJoin(ROUND);
 
     initMenu();
 }
@@ -204,15 +205,22 @@ function drawColor() {
         rect(x, y, width, height);
     }
 
-    noStroke();
-    fill(0, 0, 100);
-    textSize(25);
+    stroke("black");
+    strokeWeight(8);
+    fill("white");
+    textSize(52);
+    textFont("Segoe UI");
     text(`Select the color ${opts.color}`, 325, 80);
 }
 // #endregion
 
 // #region direction page
 function drawDirection() {
-    text(`Move the cirle ${opts.direction}`, 325, 80);
+    stroke("black");
+    strokeWeight(8);
+    fill("white");
+    textSize(52);
+    textFont("Segoe UI");
+    text(`Move the circle ${opts.direction}`, 325, 80);
 }
 // #endregion
