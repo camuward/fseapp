@@ -50,7 +50,7 @@ function setState(newState) {
             break;
         case STATE.COLOR:
             backgroundImg = loadImage("assets/color_bg.jpg");
-            
+
             const colorBank = {
                 "Easy": ["red", "yellow", "blue", "green"],
                 "Medium": ["red", "yellow", "blue", "green", "orange", "purple"],
@@ -63,6 +63,45 @@ function setState(newState) {
 
             const index = Math.floor(Math.random() * 4);
             opts.color = opts.colors[index];
+
+            cnv.mousePressed(function () {
+                if (opts.showResults) // dismiss results screen
+                    if (opts["# Rounds"]--) {
+                        opts.showResults = false;
+                        opts.colors = colorBank[opts["Difficulty"]]
+                            .sort(() => 0.5 - Math.random())
+                            .slice(0, 4);
+
+                        const index = Math.floor(Math.random() * 4);
+                        opts.color = opts.colors[index];
+                    }
+                    else // no rounds left
+                        setState(STATE.MENU);
+                else { // user maybe clicked a square
+                    for (let i = 0; i < 4; i++) {
+                        const [width, height, pad] = [200, 200, 10];
+                        const x = i % 2 ? 325 + pad : 325 - width - pad;
+                        const y = 40 + (Math.floor(i / 2) ? 300 + pad : 300 - height - pad);
+                        const mouseOut = mouseX < x || mouseX > x + width || mouseY < y || mouseY > y + height;
+
+                        if (!mouseOut) { // they clicked this square
+                            const correct = opts.color === opts.colors[i];
+                            const score = opts.results ? opts.results.score + correct : correct;
+
+                            const splashes = ["Nice one!", "Great job!", "Good work!", "That's right!", "Correct!", "Spot on!"];
+                            const splash = correct ? splashes[Math.floor(Math.random() * splashes.length)] : "Wrong!";
+
+                            opts.results = ({
+                                correct,
+                                score,
+                                splash,
+                                index: i,
+                            });
+                            opts.showResults = true;
+                        }
+                    }
+                }
+            });
             break;
         case STATE.DIRECTION:
             backgroundImg = loadImage("assets/dir_bg.jpg");
@@ -189,19 +228,52 @@ function createDropdown(id, pos, entries) {
 
 // #region color page
 function drawColor() {
+    if (opts.showResults) {
+        const {
+            correct,
+            score,
+            index,
+            splash,
+        } = opts.results;
+
+        stroke("black");
+        strokeWeight(8);
+        textSize(52);
+        textFont("Segoe UI");
+        fill(correct ? "white" : "red");
+        text(splash, 325, 80);
+
+        if (!correct) {
+            textSize(24);
+            text(`You picked ${opts.colors[index]}, not ${opts.color}`, 325, 220);
+
+            for (let i = 0; i < 2; i++) {
+                const [width, height, pad] = [200, 200, 10];
+                const x = i % 2 ? 325 + pad : 325 - width - pad;
+                fill(i ? opts.color : opts.colors[index]);
+                stroke(i ? "green" : "red");
+                rect(x, 300, width, height);
+            }
+
+        }
+
+        stroke("black");
+        strokeWeight(4);
+        fill("white")
+        textSize(18);
+        text("click anywhere to continue...", 325, 550);
+
+        return;
+    }
+
     for (let i = 0; i < 4; i++) {
-        const [width, height] = [200, 200];
-        const pad = 10;
+        const [width, height, pad] = [200, 200, 10];
+        const x = i % 2 ? 325 + pad : 325 - width - pad;
+        const y = 40 + (Math.floor(i / 2) ? 300 + pad : 300 - height - pad);
+        const mouseOut = mouseX < x || mouseX > x + width || mouseY < y || mouseY > y + height;
 
-        const x = i % 2 ? 325 - width - pad : 325 + pad;
-        const y = 25 + (Math.floor(i / 2) ? 300 - height - pad : 300 + pad);
-
-        if (mouseX < x || mouseX > x + width || mouseY < y || mouseY > y + height)
-            noStroke();
-        else // the mouse is hovering over this square
-            stroke("white");
-        
         fill(opts.colors[i]);
+        stroke(mouseOut ? opts.colors[i] : "white");
         rect(x, y, width, height);
     }
 
@@ -221,6 +293,6 @@ function drawDirection() {
     fill("white");
     textSize(52);
     textFont("Segoe UI");
-    text(`Move the circle ${opts.direction}`, 325, 80);
+    text(`Move the circle ${opts.direction} `, 325, 80);
 }
 // #endregion
