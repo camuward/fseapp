@@ -193,12 +193,18 @@ function drawColor() {
         const pad = 10;
 
         const x = i % 2 ? 325 - width - pad : 325 + pad;
-        const y = Math.floor(i / 2) ? 300 - height - pad : 300 + pad;
+        const y = 25 + (Math.floor(i / 2) ? 300 - height - pad : 300 + pad);
 
+        if (mouseX < x || mouseX > x + width || mouseY < y || mouseY > y + height)
+            noStroke();
+        else // the mouse is hovering over this square
+            stroke("white");
+        
         fill(opts.colors[i]);
-        rect(x, y + 25, width, height);
+        rect(x, y, width, height);
     }
 
+    noStroke();
     fill(0, 0, 100);
     textSize(25);
     text(`Select the color ${opts.color}`, 325, 80);
