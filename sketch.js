@@ -16,7 +16,7 @@ function draw() {
         case STATE.COLOR:
             drawColor();
             break;
-            case STATE.DIRECTION:
+        case STATE.DIRECTION:
             drawDirection();
             break;
         default:
@@ -189,10 +189,21 @@ function drawColor() {
     fill(0, 0, 100);
     textSize(25);
     text(`Select the color ${opts.color}`, 325, 80);
+}
+// #endregion
+
+// #region direction page
+function drawDirection(){
+    background(240, 100, 100);
     
-     function drawDirection(){
-        background(240,100,100);
-        text('Move the cirle to ${direction}');
-    }
+    const DIRS = {
+        UP: "up",
+        DOWN: "down",
+        LEFT: "left",
+        RIGHT: "right",
+    };
+
+    const direction = DIRS.RIGHT;
+    text(`Move the cirle ${direction}`, 325, 80);
 }
 // #endregion
