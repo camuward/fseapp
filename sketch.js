@@ -16,6 +16,9 @@ function draw() {
         case STATE.COLOR:
             drawColor();
             break;
+            case STATE.DIRECTION:
+            drawDirection();
+            break;
         default:
             background(0, 100, 100);
             throw new Error(`unhandled state "${state}"`);
@@ -181,5 +184,10 @@ function drawColor() {
     fill(0, 0, 100);
     textSize(25);
     text(`Select the color ${opts.color}`, 325, 80);
+    
+     function drawDirection(){
+        background(240,100,100);
+        text('Move the cirle to ${direction}');
+    }
 }
 // #endregion
