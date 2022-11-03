@@ -39,6 +39,8 @@ function setState(newState) {
     if (state === STATE.MENU)
         menuChildren().map(el => el.remove());
 
+    cnv.mousePressed(false);
+
     switch (newState) {
         case STATE.MENU:
             initMenu();
@@ -47,7 +49,7 @@ function setState(newState) {
             const colorBank = {
                 "Easy": ["red", "yellow", "blue", "green"],
                 "Medium": ["red", "yellow", "blue", "green", "orange", "purple"],
-                "Hard": [],
+                "Hard": ["red", "yellow", "blue", "green", "orange", "purple", "pink"],
             };
 
             opts.colors = colorBank[opts["Difficulty"]]
@@ -174,11 +176,14 @@ function drawColor() {
     background(0, 0, 40);
 
     for (let i = 0; i < 4; i++) {
-        const x = (i % 2) * 325;
-        const y = Math.floor(i / 2) * 300;
+        const [width, height] = [200, 200];
+        const pad = 10;
+
+        const x = i % 2 ? 325 - width - pad : 325 + pad;
+        const y = Math.floor(i / 2) ? 300 - height - pad : 300 + pad;
 
         fill(opts.colors[i]);
-        rect(x + 50, y + 50, 325 - 100, 300 - 100);
+        rect(x, y + 25, width, height);
     }
 
     fill(0, 0, 100);
