@@ -66,7 +66,7 @@ function setState(newState) {
 
             cnv.mousePressed(function () {
                 if (opts.showResults) // dismiss results screen
-                    if (opts["# Rounds"]--) {
+                    if (--opts["# Rounds"]) {
                         opts.showResults = false;
                         opts.colors = colorBank[opts["Difficulty"]]
                             .sort(() => 0.5 - Math.random())
