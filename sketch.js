@@ -38,6 +38,8 @@ const STATE = {
 };
 
 function setState(newState) {
+    background(0);
+
     if (state === STATE.MENU)
         menuChildren().map(el => el.remove());
 
