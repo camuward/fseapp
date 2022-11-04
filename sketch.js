@@ -1,7 +1,63 @@
 p5.disableFriendlyErrors = true;
-var cnv, backgroundImg;
+var CONF, STATE, cnv, opts, state, backgroundImg;
 
 function setup() {
+    CONF = ({
+        menu: {
+            settingsImg: loadImage("assets/settings.png"),
+            dropdowns: {
+                "Mode": () => [...Object.values(STATE)
+                    .map(({ title }) => title)
+                    .filter(title => title !== STATE.MENU.title)],
+                "Difficulty": () => ["Easy", "Medium", "Hard"],
+                "# Rounds": () => ["2", "4", "6"],
+            },
+        },
+        dir: { values: ["up", "down", "left", "right"] },
+        color: {
+            pos: [325, 300],
+            size: [200, 200],
+            pad: 10,
+            bank: {
+                "Easy": ["red", "yellow", "blue", "green"],
+                "Medium": ["red", "yellow", "blue", "green", "orange", "purple"],
+                "Hard": ["red", "yellow", "blue", "green", "orange", "purple", "pink"],
+            },
+        },
+    });
+
+    STATE = ({
+        MENU: {
+            title: "Menu",
+            init: initMenu,
+            draw: drawMenu,
+            bg: loadImage("assets/menu_bg.jpg"),
+        },
+        DIR: {
+            title: "Direction",
+            init: () => {
+                backgroundImg = loadImage("assets/dir_bg.jpg");
+
+                const index = Math.floor(Math.random() * 4);
+                opts.direction = CONF.dir.values[index];
+            },
+            draw: drawDirection,
+            bg: loadImage("assets/dir_bg.jpg"),
+        },
+        COLOR: {
+            title: "Color",
+            init: initColor,
+            draw: drawColor,
+            bg: loadImage("assets/color_bg.jpg"),
+        },
+        TYPING: {
+            title: "Typing",
+            init: () => { },
+            draw: () => { },
+            bg: loadImage("assets/kbd_bg.jpg"),
+        },
+    });
+
     cnv = createCanvas(650, 600);
     colorMode(HSB, 360, 100, 100, 100);
     strokeJoin(ROUND);
@@ -9,84 +65,33 @@ function setup() {
 }
 
 function draw() {
-    background(backgroundImg);
-
-    switch (state) {
-        case STATE.MENU:
-            drawMenu();
-            break;
-        case STATE.COLOR:
-            drawColor();
-            break;
-        case STATE.DIRECTION:
-            drawDirection();
-            break;
-        default:
-            background(0, 100, 100);
-            throw new Error(`unhandled state "${state}"`);
-    }
+    background(state.bg);
+    state.draw();
 }
 
 // #region state management
-var state;
-
-const STATE = {
-    MENU: "Menu",
-    DIRECTION: "Direction",
-    COLOR: "Color",
-    TYPING: "Typing",
-};
-
 function setState(newState) {
-    if (state === STATE.MENU)
+    if (state && state.title === STATE.MENU.title)
         menuChildren().map(el => el.remove());
 
     cnv.mousePressed(false);
 
-    switch (newState) {
-        case STATE.MENU:
-            initMenu();
-            break;
-        case STATE.COLOR:
-            initColor();
-            break;
-        case STATE.DIRECTION:
-            backgroundImg = loadImage("assets/dir_bg.jpg");
-
-            const DIRS = {
-                UP: "up",
-                DOWN: "down",
-                LEFT: "left",
-                RIGHT: "right",
-            };
-
-            opts.direction = Object.values(DIRS)[Math.floor(Math.random() * 4)];
-
-            break;
-    };
-
     state = newState;
+    state.init();
 }
 // #endregion
 
 // #region menu
-var opts, settingsImg;
-
 function initMenu() {
+    const { dropdowns, settingsImg } = CONF.menu;
+
     opts = ({
         settings: false
     });
-    state = STATE.MENU;
-    backgroundImg = loadImage("assets/menu_bg.jpg");
-    settingsImg = loadImage("assets/settings.png");
 
-    const labels = ["Mode", "Difficulty", "# Rounds"];
-    const modes = Object.values(STATE).filter(v => v !== STATE.MENU);
-    opts.dropdowns = [
-        createDropdown(labels[0], [110, 300], modes),
-        createDropdown(labels[1], [250, 300], ["Easy", "Medium", "Hard"]),
-        createDropdown(labels[2], [400, 300], ["2", "4", "6"]),
-    ];
+    const widths = [110, 250, 400];
+    opts.dropdowns = Object.entries(dropdowns)
+        .map(([k, v], i) => createDropdown(k, [widths[i], 300], v()));
 
     const start = createButton("Start");
     start.position(255, 370);
@@ -99,7 +104,7 @@ function initMenu() {
     });
 
     // settings button
-    const settings = createImg("assets/settings.png");
+    const settings = createImg(settingsImg);
     settings.position(610, 0);
     settings.size(40, 40);
     settings.mousePressed(function () { // when the gear is clicked
@@ -175,15 +180,13 @@ function createDropdown(id, pos, entries) {
 
 // #region color page
 function initColor() {
-    backgroundImg = loadImage("assets/color_bg.jpg");
+    const { bank, pad, pos: [xOff, yOff], size: [width, height] } = CONF.color;
+    const getPos = i => [
+        i % 2 ? xOff + pad : xOff - width - pad,
+        Math.floor(i / 2) ? yOff + pad : yOff - height - pad
+    ];
 
-    const colorBank = {
-        "Easy": ["red", "yellow", "blue", "green"],
-        "Medium": ["red", "yellow", "blue", "green", "orange", "purple"],
-        "Hard": ["red", "yellow", "blue", "green", "orange", "purple", "pink"],
-    };
-
-    opts.colors = colorBank[opts["Difficulty"]]
+    opts.colors = bank[opts["Difficulty"]]
         .sort(() => 0.5 - Math.random())
         .slice(0, 4);
 
@@ -194,7 +197,7 @@ function initColor() {
         if (opts.showResults) // dismiss results screen
             if (--opts["# Rounds"]) {
                 opts.showResults = false;
-                opts.colors = colorBank[opts["Difficulty"]]
+                opts.colors = bank[opts["Difficulty"]]
                     .sort(() => 0.5 - Math.random())
                     .slice(0, 4);
 
@@ -205,9 +208,6 @@ function initColor() {
                 setState(STATE.MENU);
         else { // user maybe clicked a square
             for (let i = 0; i < 4; i++) {
-                const [width, height, pad] = [200, 200, 10];
-                const x = i % 2 ? 325 + pad : 325 - width - pad;
-                const y = 40 + (Math.floor(i / 2) ? 300 + pad : 300 - height - pad);
                 const mouseOut = mouseX < x || mouseX > x + width || mouseY < y || mouseY > y + height;
 
                 if (!mouseOut) { // they clicked this square
@@ -231,6 +231,12 @@ function initColor() {
 }
 
 function drawColor() {
+    const { pos: [xOff, yOff], size: [width, height], pad } = CONF.color;
+    const getPos = i => [
+        i % 2 ? xOff + pad : xOff - width - pad,
+        Math.floor(i / 2) ? yOff + pad : yOff - height - pad
+    ];
+
     if (opts.showResults) {
         const {
             correct,
@@ -251,8 +257,6 @@ function drawColor() {
             text(`You picked ${opts.colors[index]}, not ${opts.color}`, 325, 220);
 
             for (let i = 0; i < 2; i++) {
-                const [width, height, pad] = [200, 200, 10];
-                const x = i % 2 ? 325 + pad : 325 - width - pad;
                 fill(i ? opts.color : opts.colors[index]);
                 stroke(i ? "green" : "red");
                 rect(x, 300, width, height);
@@ -270,9 +274,6 @@ function drawColor() {
     }
 
     for (let i = 0; i < 4; i++) {
-        const [width, height, pad] = [200, 200, 10];
-        const x = i % 2 ? 325 + pad : 325 - width - pad;
-        const y = 40 + (Math.floor(i / 2) ? 300 + pad : 300 - height - pad);
         const mouseOut = mouseX < x || mouseX > x + width || mouseY < y || mouseY > y + height;
 
         fill(opts.colors[i]);
