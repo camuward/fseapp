@@ -5,15 +5,13 @@ let y = 300;
 let diameter = 80;
 let dragging = false;
 
-function preload() {
-  img1 = loadImage("assets/congrat.jpg");
-}
 
 function setup() {
   cnv = createCanvas(650, 600);
   colorMode(HSB, 360, 100, 100, 100);
   strokeJoin(ROUND);
   setState(STATE.MENU);
+  img1 = loadImage("assets/congrat.jpg");
   
 }
 
@@ -268,6 +266,11 @@ function initColor() {
 }
 
 function drawColor() {
+  menu1 = createButton('Menu');
+  menu1.position(0, 0);
+  menu1.mousePressed(exitmenu);
+  menu1.style("background", color(25, 23, 100));
+
   if (opts.showResults) {
     const { correct, score, index, splash } = opts.results;
     stroke("black");
@@ -275,7 +278,7 @@ function drawColor() {
     textSize(52);
     textFont("Georgia");
     fill(correct ? "white" : "red");
-    text(splash, 325, 80);
+    text(splash, 325, 80);   
     if (!correct) {
       textSize(24);
       text(`You picked ${opts.colors[index]}, not ${opts.color}`, 325, 220);
@@ -320,6 +323,10 @@ function drawColor() {
 
 // #region direction page
 function drawDirection() {
+  menu1 = createButton('Menu');
+  menu1.position(0, 0);
+  menu1.mousePressed(exitmenu);
+  menu1.style("background", color(25, 23, 100));
   stroke("black");
   strokeWeight(8);
   fill("pink");
@@ -371,6 +378,10 @@ function initTyping() {
   }
 }
 function drawTyping() {
+  menu1 = createButton('Menu');
+  menu1.position(0, 0);
+  menu1.mousePressed(exitmenu);
+  menu1.style("background", color(25, 23, 100));
   stroke("black");
   strokeWeight(8);
   fill("pink");
@@ -394,4 +405,9 @@ function mousePressed() {
 
 function mouseReleased() {
   dragging = false;
+}
+function exitmenu()
+{
+  setState(STATE.MENU);
+  
 }
