@@ -1,11 +1,20 @@
 p5.disableFriendlyErrors = true;
 var cnv, backgroundImg;
+let x = 325;
+let y = 300;
+let diameter = 80;
+let dragging = false;
+
+function preload() {
+  img1 = loadImage("assets/congrat.jpg");
+}
 
 function setup() {
   cnv = createCanvas(650, 600);
   colorMode(HSB, 360, 100, 100, 100);
   strokeJoin(ROUND);
   setState(STATE.MENU);
+  
 }
 
 function draw() {
@@ -232,7 +241,6 @@ function initColor() {
           // they clicked this square
           const correct = opts.color === opts.colors[i];
           const score = opts.results ? opts.results.score + correct : correct;
-
           const splashes = [
             "Nice one!",
             "Great job!",
@@ -250,6 +258,7 @@ function initColor() {
             score,
             splash,
             index: i,
+            
           };
           opts.showResults = true;
         }
@@ -261,14 +270,12 @@ function initColor() {
 function drawColor() {
   if (opts.showResults) {
     const { correct, score, index, splash } = opts.results;
-
     stroke("black");
     strokeWeight(8);
     textSize(52);
     textFont("Georgia");
     fill(correct ? "white" : "red");
     text(splash, 325, 80);
-
     if (!correct) {
       textSize(24);
       text(`You picked ${opts.colors[index]}, not ${opts.color}`, 325, 220);
@@ -281,7 +288,6 @@ function drawColor() {
         rect(x, 300, width, height);
       }
     }
-
     stroke("black");
     strokeWeight(4);
     fill("white");
@@ -320,40 +326,49 @@ function drawDirection() {
   textSize(52);
   textFont("Georgia");
   text(`Move the circle ${opts.direction} `, 325, 80);
+  fill("red");
+  if (dragging) {
+    x = mouseX;
+    y = mouseY;
+  }
+
+  noStroke();
+  ellipse(x, y, diameter, diameter);
 }
-function initTyping(){
-  backgroundImg = loadImage("assets/typing.jpg");
-  const TYPE = { 
-         A: "A",
-             B: "B",
- C: "C",
-  D:  "D",
-   E: "E",
-   F: "F",
- G: "G",
-   H: "H" ,
- I: "I",
-   J: "J",
-   K: "K" ,
-   L: "L",
-   M: "M",
-   N: "N"  ,
-   O: "O",
-   P: "P",
-   Q: "Q",
-   R: "R",
-   S: "S",
-   T: "T",
-   U: "U",
-   V: "V",
-   W: "W",
-   X: "X",
-   Y: "Y",
-   Z: "Z",
+function initTyping() {
+  const TYPE = {
+    A: "A",
+    B: "B",
+    C: "C",
+    D: "D",
+    E: "E",
+    F: "F",
+    G: "G",
+    H: "H",
+    I: "I",
+    J: "J",
+    K: "K",
+    L: "L",
+    M: "M",
+    N: "N",
+    O: "O",
+    P: "P",
+    Q: "Q",
+    R: "R",
+    S: "S",
+    T: "T",
+    U: "U",
+    V: "V",
+    W: "W",
+    X: "X",
+    Y: "Y",
+    Z: "Z",
   };
 
-      opts.typing = Object.values(TYPE)[Math.floor(Math.random() * 27)];
-
+  opts.typing = Object.values(TYPE)[Math.floor(Math.random() * 27)];
+  function myInputEvent(inp) {
+    if (inp == opts.typing) text("You are correct");
+  }
 }
 function drawTyping() {
   stroke("black");
@@ -362,6 +377,21 @@ function drawTyping() {
   textSize(52);
   textFont("Georgia");
   text(`Type the letter: ${opts.typing} `, 335, 80);
-}
-// #endregion
 
+  let inp = createInput("");
+  inp.position(220, 150);
+  inp.size(200, 200);
+  inp.style("background", color(25, 23, 100));
+
+  inp.input(myInputEvent);
+}
+function mousePressed() {
+  //check if mouse is over the ellipse
+  if (dist(x, y, mouseX, mouseY) < diameter / 2) {
+    dragging = true;
+  }
+}
+
+function mouseReleased() {
+  dragging = false;
+}
