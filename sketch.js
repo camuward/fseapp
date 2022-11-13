@@ -256,11 +256,14 @@ function drawColor() {
         textSize(52);
         textFont("Segoe UI");
         fill(correct ? "white" : "red");
-        text(splash, 325, 80);
+      fill("pink");
+    stroke("black");
+    strokeWeight(8);
+        text(splash, 300, 100);
 
         if (!correct) {
             textSize(24);
-            text(`You picked ${opts.bank[index]}, not ${opts.color}`, 325, 220);
+            text(`You picked ${opts.bank[index]}, not ${opts.color}`, 300, 220);
 
             for (let i = 0; i < 2; i++) {
                 const [width, height, pad] = [200, 200, 10];
@@ -274,8 +277,11 @@ function drawColor() {
         stroke("black");
         strokeWeight(4);
         fill("white");
-        textSize(18);
-        text("click anywhere to continue...", 325, 550);
+        textSize(25);
+      fill("pink");
+    stroke("black");
+    strokeWeight(8);
+        text("Click Anywhere to Continue", 330, 550);
 
         return;
     }
@@ -297,6 +303,9 @@ function drawColor() {
     fill("white");
     textSize(52);
     textFont("Segoe UI");
+  fill("pink");
+    stroke("black");
+    strokeWeight(8);
     text(`Select the color ${opts.color}`, 325, 80);
 }
 // #endregion
@@ -351,6 +360,8 @@ function drawDirection() {
     fill("white");
     textSize(52);
     textFont("Segoe UI");
+  fill("pink");
+    stroke("black");
     text(`Move the circle ${opts.direction}`, 325, 80);
 
     noStroke();
@@ -359,7 +370,7 @@ function drawDirection() {
         circle(mouseX, mouseY, 100);
     } else {
         fill("yellow");
-        circle(350, 300, 100);
+        circle(320, 300, 100);
     }
 }
 // #endregion
@@ -371,7 +382,7 @@ function initTyping() {
     const wordBank = {
         "Easy": "abcdefghijklmnopqrstuvwxyz".split(""),
         "Medium": ["ace", "act", "add", "age", "ago", "aid", "aim", "air", "ale", "all", "and", "ant", "any", "ape", "app", "apt", "arc", "are", "arm", "art", "ash", "ask", "ate", "awe", "axe", "bar", "bat", "cab", "can", "cap", "car", "cat", "cel", "cob", "cod", "cog", "cop", "cot"],
-        "Hard": ["difficult", "challenging", "tremendous"],
+        "Hard": ["lamp", "dark", "pace", "here", "this", "that", "what", "come", "came", "down", "post", "burn", "hate", "crib", "milk", "numb", "grid", "game", "goat", "beat", "brat", "lion", "plan", "plum", "peer", "pear"],
     }
     const bank = wordBank[opts["Difficulty"]];
     opts.word = bank[Math.floor(Math.random() * bank.length)];
@@ -390,13 +401,16 @@ function drawTyping() {
     if (opts.showResults) {
         textFont("Georgia");
         textAlign(CENTER);
-        textSize(10);
-        text("click anywhere to continue...", 350, 400);
+        textSize(40);
+      fill("pink");
+    stroke("black");
+    strokeWeight(8);
+        text("Great Work!", 300, 220);
+        text("Click to Continue", 300, 290);
         return;
     }
-
-    textFont("monospace");
-    textSize(52);
+    textFont("Georgia"); 
+  textSize(52);
     textAlign(LEFT);
     const longer = opts.word.length > opts.buffer.length ? opts.word : opts.buffer;
     for (let i = 0; i < longer.length; i++) {
@@ -407,11 +421,11 @@ function drawTyping() {
 
         if (other && other !== char) {
             fill("white");
-            text(other, 50 + offset, 120);
+            text(other, 150 + offset, 180);
             fill("red");
         } else fill(other ? "green" : "white");
 
-        if (char) text(char, 50 + offset, 80);
+        if (char) text(char, 100 + offset, 80);
     }
 }
 
