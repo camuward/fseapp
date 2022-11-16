@@ -256,9 +256,9 @@ function drawColor() {
         textSize(52);
         textFont("Segoe UI");
         fill(correct ? "white" : "red");
-      fill("pink");
-    stroke("black");
-    strokeWeight(8);
+        fill("pink");
+        stroke("black");
+        strokeWeight(8);
         text(splash, 300, 100);
 
         if (!correct) {
@@ -278,9 +278,9 @@ function drawColor() {
         strokeWeight(4);
         fill("white");
         textSize(25);
-      fill("pink");
-    stroke("black");
-    strokeWeight(8);
+        fill("pink");
+        stroke("black");
+        strokeWeight(8);
         text("Click Anywhere to Continue", 330, 550);
 
         return;
@@ -303,7 +303,7 @@ function drawColor() {
     fill("white");
     textSize(52);
     textFont("Segoe UI");
-  fill("pink");
+    fill("pink");
     stroke("black");
     strokeWeight(8);
     text(`Select the color ${opts.color}`, 325, 80);
@@ -318,7 +318,7 @@ function initDirection() {
         "Easy": ["Right", "Up", "Left", "Down"],
         "Medium": ["East", "North", "West", "South"],
         "Hard": ["East", "North", "West", "South"],
-    }
+    };
 
     opts.direction = dirBank[opts["Difficulty"]][Math.floor(Math.random() * 4)];
     cnv.mousePressed(function () {
@@ -360,7 +360,7 @@ function drawDirection() {
     fill("white");
     textSize(52);
     textFont("Segoe UI");
-  fill("pink");
+    fill("pink");
     stroke("black");
     text(`Move the circle ${opts.direction}`, 325, 80);
 
@@ -383,7 +383,7 @@ function initTyping() {
         "Easy": "abcdefghijklmnopqrstuvwxyz".split(""),
         "Medium": ["ace", "act", "add", "age", "ago", "aid", "aim", "air", "ale", "all", "and", "ant", "any", "ape", "app", "apt", "arc", "are", "arm", "art", "ash", "ask", "ate", "awe", "axe", "bar", "bat", "cab", "can", "cap", "car", "cat", "cel", "cob", "cod", "cog", "cop", "cot"],
         "Hard": ["lamp", "dark", "pace", "here", "this", "that", "what", "come", "came", "down", "post", "burn", "hate", "crib", "milk", "numb", "grid", "game", "goat", "beat", "brat", "lion", "plan", "plum", "peer", "pear"],
-    }
+    };
     const bank = wordBank[opts["Difficulty"]];
     opts.word = bank[Math.floor(Math.random() * bank.length)];
     opts.showResults = false;
@@ -402,15 +402,15 @@ function drawTyping() {
         textFont("Georgia");
         textAlign(CENTER);
         textSize(40);
-      fill("pink");
-    stroke("black");
-    strokeWeight(8);
+        fill("pink");
+        stroke("black");
+        strokeWeight(8);
         text("Great Work!", 300, 220);
         text("Click to Continue", 300, 290);
         return;
     }
-    textFont("Georgia"); 
-  textSize(52);
+    textFont("Georgia");
+    textSize(52);
     textAlign(LEFT);
     const longer = opts.word.length > opts.buffer.length ? opts.word : opts.buffer;
     for (let i = 0; i < longer.length; i++) {
