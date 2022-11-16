@@ -322,9 +322,16 @@ function initDirection() {
 
     opts.direction = dirBank[opts["Difficulty"]][Math.floor(Math.random() * 4)];
     cnv.mousePressed(function () {
-        const mouse = createVector(mouseX, mouseY);
-        if (createVector(350, 300).sub(mouse).mag() <= 100)
-            opts.mouseStart = mouse;
+        if (opts.showResults) {
+            if (--opts["# Rounds"]) {
+                opts.showResults = false;
+                opts.direction = dirBank[opts["Difficulty"]][Math.floor(Math.random() * 4)];
+            } else setState(STATE.MENU);
+        } else {
+            const mouse = createVector(mouseX, mouseY);
+            if (createVector(350, 300).sub(mouse).mag() <= 100)
+                opts.mouseStart = mouse;
+        }
     });
     cnv.mouseReleased(function () {
         if (!opts.mouseStart) return;
@@ -348,6 +355,7 @@ function initDirection() {
                     opts.dir = 1; // up
                     break;
             }
+            opts.results = opts.dir === dirBank[opts["Difficulty"]].indexOf(opts.direction);
             opts.showResults = true;
         }
         opts.mouseStart = undefined;
@@ -355,6 +363,7 @@ function initDirection() {
 }
 
 function drawDirection() {
+
     stroke("black");
     strokeWeight(8);
     fill("white");
@@ -362,6 +371,13 @@ function drawDirection() {
     textFont("Segoe UI");
     fill("pink");
     stroke("black");
+
+    if (opts.showResults) {
+        text(opts.results ? "Great job!" : "Wrong!", 350, 180);
+        text("Click to continue...", 350, 400);
+        return;
+    }
+
     text(`Move the circle ${opts.direction}`, 325, 80);
 
     noStroke();
