@@ -76,12 +76,9 @@ function setState(newState) {
 
 // #region menu
 function initMenu() {
-    opts = {
-        settings: false,
-    };
+    opts = ({});
     state = STATE.MENU;
     backgroundImg = loadImage("assets/menu_bg.jpg");
-    settingsImg = loadImage("assets/settings.png");
 
     const labels = ["Mode", "Difficulty", "# Rounds"];
     const modes = Object.values(STATE).filter((v) => v !== STATE.MENU);
@@ -100,38 +97,10 @@ function initMenu() {
         if (mode && diff && rounds) setState(mode);
     });
 
-    // settings button
-    const settings = createImg("assets/settings.png");
-    settings.position(610, 0);
-    settings.size(40, 40);
-    settings.mousePressed(function () {
-        // when the gear is clicked
-        opts.settings = true; // open the settings menu
-        opts.elements.map((el) => el.hide()); // hide the dropdowns & btns
-        cnv.mousePressed(function () {
-            // register a click handler
-            const [outX, outY] = [
-                mouseX < 50 || mouseX > 600,
-                mouseY < 50 || mouseY > 550,
-            ];
-            if (outX || outY) {
-                // when the click is outside the settings menu
-                opts.settings = false; // close the settings menu
-                opts.elements.map((el) => el.show()); // show the underlying elements
-                cnv.mousePressed(false); // unregister the click handler
-            }
-        });
-    });
-
-    opts.elements = [start, settings, ...dropdowns];
+    opts.elements = [start, ...dropdowns];
 }
 
 function drawMenu() {
-    if (opts.settings) {
-        drawSettings();
-        return;
-    }
-
     fill("pink");
     stroke("black");
     strokeWeight(8);
@@ -141,22 +110,6 @@ function drawMenu() {
     textStyle(BOLD);
     textAlign(CENTER);
     text("Wonder Kids", 325, 180);
-}
-
-function drawSettings() {
-    noStroke();
-    fill(0, 0, 0, 40);
-    rect(0, 0, 650, 600);
-
-    fill(210, 23, 40, 96);
-    rect(50, 50, 550, 500);
-
-    textSize(40);
-    textStyle(NORMAL);
-    fill("pink");
-    stroke("black");
-    strokeWeight(8);
-    text("Settings", 325, 120);
 }
 
 function createDropdown(id, pos, entries) {
