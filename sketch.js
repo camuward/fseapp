@@ -339,9 +339,6 @@ function drawDirection() {
         if(opts.results==true){
   image(img3, 130, 150, 300, 300);
 }
-       if(opts.results==false){
-  image(img4, 130, 150, 300, 300);
-}
         text(opts.results ? "Great job!" : "Wrong!", 325, 90);
         text("Click to continue...", 325, 550);
         return;
