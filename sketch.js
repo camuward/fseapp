@@ -4,7 +4,7 @@ let img3;
 let img4;
 function preload() {
   img3 = loadImage('assets/good.png');
-  img3 = loadImage('assets/wrong.png');
+  img4 = loadImage('assets/wrong.png');
 }
 
 function setup() {
@@ -338,6 +338,9 @@ function drawDirection() {
     if (opts.showResults) {
         if(opts.results==true){
   image(img3, 130, 150, 300, 300);
+}
+       if(opts.results==false){
+  image(img4, 130, 150, 300, 300);
 }
         text(opts.results ? "Great job!" : "Wrong!", 325, 90);
         text("Click to continue...", 325, 550);
