@@ -428,4 +428,3 @@ function keyPressed() {
         } else if (keyCode === BACKSPACE)
             opts.buffer = opts.buffer.substr(0, opts.buffer.length - 1);
 }
-#endregion
