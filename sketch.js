@@ -1,5 +1,9 @@
 p5.disableFriendlyErrors = true;
 var cnv, opts = {}, state, backgroundImg, settingsImg;
+let img3;
+function preload() {
+  img3 = loadImage('assets/good.png');
+}
 
 function setup() {
     cnv = createCanvas(650, 600);
@@ -213,6 +217,10 @@ function drawColor() {
         stroke("black");
         strokeWeight(8);
         text(splash, 300, 100);
+      if(correct){
+        
+        image(img3, 130, 150, 300, 300);
+      }
 
         if (!correct) {
             textSize(24);
@@ -234,7 +242,7 @@ function drawColor() {
         fill("pink");
         stroke("black");
         strokeWeight(8);
-        text("Click Anywhere to Continue", 330, 550);
+        text("Click Anywhere to Continue", 300, 550);
 
         return;
     }
@@ -326,11 +334,13 @@ function drawDirection() {
     stroke("black");
 
     if (opts.showResults) {
-        text(opts.results ? "Great job!" : "Wrong!", 350, 180);
-        text("Click to continue...", 350, 400);
+        if(opts.results==true){
+  image(img3, 130, 150, 300, 300);
+}
+        text(opts.results ? "Great job!" : "Wrong!", 325, 90);
+        text("Click to continue...", 325, 550);
         return;
     }
-
     text(`Move the circle ${opts.direction}`, 325, 80);
 
     noStroke();
@@ -374,8 +384,9 @@ function drawTyping() {
         fill("pink");
         stroke("black");
         strokeWeight(8);
-        text("Great Work!", 300, 220);
-        text("Click to Continue", 300, 290);
+        text("Great Work!", 325, 90);
+        text("Click to Continue", 325, 550);
+       image(img3, 130, 150, 300, 300);
         return;
     }
     textFont("Georgia");
@@ -417,4 +428,4 @@ function keyPressed() {
         } else if (keyCode === BACKSPACE)
             opts.buffer = opts.buffer.substr(0, opts.buffer.length - 1);
 }
-// #endregion
+#endregion
