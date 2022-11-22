@@ -393,19 +393,26 @@ function drawTyping() {
     textSize(52);
     textAlign(LEFT);
     const longer = opts.word.length > opts.buffer.length ? opts.word : opts.buffer;
-    for (let i = 0; i < longer.length; i++) {
+   textFont("Georgia");
+        textAlign(CENTER);
+        textSize(35);
+        fill("pink");
+        stroke("black");
+        strokeWeight(8);
+  text("Type The Following Word : ", 280, 90);
+  for (let i = 0; i < longer.length; i++) {
         const char = opts.word.charAt(i);
         const offset = textWidth(longer.substr(0, i));
 
         const other = opts.buffer.charAt(i);
-
+textAlign(LEFT);
         if (other && other !== char) {
-            fill("white");
-            text(other, 150 + offset, 180);
+            fill("red");
+            text(other, 100 + offset, 280);
             fill("red");
         } else fill(other ? "green" : "white");
 
-        if (char) text(char, 100 + offset, 80);
+        if (char) text(char, 100 + offset, 180);
     }
 }
 
